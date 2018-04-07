@@ -61,8 +61,8 @@
     ]
 }
 
-shaderFile ::= item_*
+//shaderFile ::= item_*
 
-private item_ ::= (property|COMMENT|CRLF)
+//private item_ ::= (property|COMMENT|CRLF)
 
-property ::= (KEY? SEPARATOR VALUE?) | KEY {mixin= "com.teng.psi.impl.ShaderNameElementImpl" implements = "com.teng.psi.ShaderNameElement" methods=[getKey getValue getName setName getNameIdentifier]}
+//property ::= (KEY? SEPARATOR VALUE?) | KEY {mixin= "com.teng.psi.impl.ShaderNameElementImpl" implements = "com.teng.psi.ShaderNameElement" methods=[getKey getValue getName setName getNameIdentifier]}

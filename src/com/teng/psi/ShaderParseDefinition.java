@@ -70,4 +70,6 @@ public class ShaderParseDefinition implements ParserDefinition {
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
         return SpaceRequirements.MAY;
     }
+
+
 }

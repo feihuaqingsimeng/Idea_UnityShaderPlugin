@@ -16,9 +16,9 @@ import java.util.Map;
 public class ShaderColorSettingsPage implements ColorSettingsPage {
 
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
-            new AttributesDescriptor("key",ShaderSyntaxHighlighter.KEY),
-            new AttributesDescriptor("separator",ShaderSyntaxHighlighter.SEPARATOR),
-            new AttributesDescriptor("value",ShaderSyntaxHighlighter.VALUE),
+            //new AttributesDescriptor("key",ShaderSyntaxHighlighter.KEY),
+            //new AttributesDescriptor("separator",ShaderSyntaxHighlighter.SEPARATOR),
+            //new AttributesDescriptor("value",ShaderSyntaxHighlighter.VALUE),
     };
 
     @Nullable
