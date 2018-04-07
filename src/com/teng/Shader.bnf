@@ -1,0 +1,23 @@
+{
+    parserClass="com.teng.parser.ShaderParser"
+
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix="Shader"
+    psiImplClassSuffix="Impl"
+    psiPackage="com.teng.psi"
+    psiImplPackage="com.teng.psi.impl"
+    psiImplUtilClass="com.teng.psi.impl.ShaderPsiImplUtil"
+
+    elementTypeHolderClass="com.teng.psi.ShaderTypes"
+    elementTypeClass="com.teng.psi.ShaderElementType"
+    tokenTypeClass="com.teng.psi.ShaderTokenType"
+
+
+}
+
+shaderFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY? SEPARATOR VALUE?) | KEY {mixin= "com.teng.psi.impl.ShaderNameElementImpl" implements = "com.teng.psi.ShaderNameElement" methods=[getKey getValue getName setName getNameIdentifier]}
