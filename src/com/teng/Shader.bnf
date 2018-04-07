@@ -11,9 +11,54 @@
 
     elementTypeHolderClass="com.teng.psi.ShaderTypes"
     elementTypeClass="com.teng.psi.ShaderElementType"
+    elementTypeFactory = "com.teng.Util.ShaderUtil.createType"
     tokenTypeClass="com.teng.psi.ShaderTokenType"
+    tokenTypeFactory = "com.teng.Util.ShaderUtil.createToken"
 
 
+    tokens = [
+        BREAK = "break"
+        IF = "if"
+        ELSE = "else"
+        FOR = "for"
+        IN = "in"
+        OUT = "out"
+        REGION = "REGION"
+        ENDREGION = "ENDREGION"
+        EQUAL = "=="
+        GE = ">="
+        LE = "<="
+        NE = "!="
+        MINUS = "-"
+        PLUS = "+"
+        MULT = "*"
+        MOD = "%"
+        DIV = "/"
+        ASSIGN = "="
+        GT = ">"
+        LT = "<"
+        LPAREN = "("
+        RPAREN = ")"
+        LBRACKET = "["
+        RBRACKET = "]"
+        LCURLY = "{"
+        RCURLY = "{"
+        GETN = "#"
+        COMMA = ","
+        SEMI = ";"
+        DOT = "."
+        EXP = "^"
+
+        BLOCK_COMMENT = "BLOCK_COMMENT"
+        ID = "regexp:[A-Za-z_][A-Za-z0-9_]*"
+        NUMBER = "NUMBER"
+        STRING = "STRING"
+
+        BIT_OR = "|"
+        BIT_AND = "&"
+        BIT_LTLT = "<<"
+        BIT_RTRT = ">>"
+    ]
 }
 
 shaderFile ::= item_*
