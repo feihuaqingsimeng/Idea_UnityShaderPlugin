@@ -11,14 +11,14 @@ import static com.teng.psi.ShaderTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.teng.psi.*;
 
-public class ShaderPropertyImpl extends ASTWrapperPsiElement implements ShaderProperty {
+public class ShaderUnaryExprImpl extends ASTWrapperPsiElement implements ShaderUnaryExpr {
 
-  public ShaderPropertyImpl(ASTNode node) {
+  public ShaderUnaryExprImpl(ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull ShaderVisitor visitor) {
-    visitor.visitProperty(this);
+    visitor.visitUnaryExpr(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -27,9 +27,15 @@ public class ShaderPropertyImpl extends ASTWrapperPsiElement implements ShaderPr
   }
 
   @Override
-  @Nullable
-  public ShaderBinaryOp getBinaryOp() {
-    return findChildByClass(ShaderBinaryOp.class);
+  @NotNull
+  public ShaderUnaryExpr getUnaryExpr() {
+    return findNotNullChildByClass(ShaderUnaryExpr.class);
+  }
+
+  @Override
+  @NotNull
+  public ShaderUnaryOp getUnaryOp() {
+    return findNotNullChildByClass(ShaderUnaryOp.class);
   }
 
 }

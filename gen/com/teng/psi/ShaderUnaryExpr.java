@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface ShaderProperty extends PsiElement {
+public interface ShaderUnaryExpr extends PsiElement {
 
-  @Nullable
-  ShaderBinaryOp getBinaryOp();
+  @NotNull
+  ShaderUnaryExpr getUnaryExpr();
+
+  @NotNull
+  ShaderUnaryOp getUnaryOp();
 
 }

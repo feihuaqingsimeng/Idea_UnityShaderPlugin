@@ -9,6 +9,7 @@
     psiImplPackage="com.teng.psi.impl"
     psiImplUtilClass="com.teng.psi.impl.ShaderPsiImplUtil"
 
+    parserUtilClass = "com.teng.psi.ShaderParseUtil"
     elementTypeHolderClass="com.teng.psi.ShaderTypes"
     elementTypeClass="com.teng.psi.ShaderElementType"
     elementTypeFactory = "com.teng.Util.ShaderUtil.createType"
@@ -17,6 +18,8 @@
 
 
     tokens = [
+        OR = "||"
+        AND = "&&"
         BREAK = "break"
         IF = "if"
         ELSE = "else"
@@ -25,7 +28,9 @@
         OUT = "out"
         REGION = "REGION"
         ENDREGION = "ENDREGION"
-        EQUAL = "=="
+        NOT = "!"
+
+        EQ = "=="
         GE = ">="
         LE = "<="
         NE = "!="
@@ -56,13 +61,65 @@
 
         BIT_OR = "|"
         BIT_AND = "&"
+        BIT_TILDE = "~"
         BIT_LTLT = "<<"
         BIT_RTRT = ">>"
     ]
 }
 
-//shaderFile ::= item_*
+shaderFile ::= stat_semi*
 
-//private item_ ::= (property|COMMENT|CRLF)
+private stat_semi ::= stat_impl ';' ?
 
-//property ::= (KEY? SEPARATOR VALUE?) | KEY {mixin= "com.teng.psi.impl.ShaderNameElementImpl" implements = "com.teng.psi.ShaderNameElement" methods=[getKey getValue getName setName getNameIdentifier]}
+private stat_impl ::= property
+
+expr ::= <<parseExpr primaryExpr closureExpr>>
+{
+    implements = [
+        //"com.teng.psi.element.ShaderTypeGuessable"
+    ]
+}
+
+binaryOp ::= '+' | '-' | '*' | '/' | '^' | '%' | '<' | '<=' | '>' | '>=' | '==' | '!=' | '&&' | '||'
+    | '|' | '&' | '>>' | '<<' | '~'
+left binaryExpr  ::= binaryOp expr
+{
+    pin = 1
+    implements = [
+    ]
+}
+unaryOp ::= '-' | '!'
+unaryExpr ::= unaryOp (unaryExpr )
+/*private primaryExpr ::= prefixExpr(suffixExpr*)
+private prefixExpr ::= parenExpr | nameExpr | literalExpr| tableExpr
+private suffixExpr ::= indexExpr | callExpr
+
+parenExpr ::= '(' expr ')'
+{
+
+}
+nameExpr ::= ID
+{
+
+}
+literalExpr ::= null | false | true | NUMBER |STRING {
+
+}
+tableExpr ::= '{'fieldList '}'
+{
+
+}
+left indexExpr ::= '[' expr ']' | '.' ID
+{
+
+}
+left callExpr ::= args {
+
+}
+closureExpr ::= 'function' funcBody{
+
+}
+*/
+ifStat ::= 'if' ID 'then' ID 'end'{}
+
+property ::= (KEY? SEPARATOR VALUE?) | KEY | COMMENT|CRLF |binaryOp

@@ -7,11 +7,29 @@ import com.intellij.psi.PsiElement;
 
 public class ShaderVisitor extends PsiElementVisitor {
 
-  public void visitProperty(@NotNull ShaderProperty o) {
-    visitNameElement(o);
+  public void visitBinaryExpr(@NotNull ShaderBinaryExpr o) {
   }
 
-  public void visitNameElement(@NotNull ShaderNameElement o) {
+  public void visitBinaryOp(@NotNull ShaderBinaryOp o) {
+    visitPsiElement(o);
+  }
+
+  public void visitExpr(@NotNull ShaderExpr o) {
+  }
+
+  public void visitIfStat(@NotNull ShaderIfStat o) {
+    visitPsiElement(o);
+  }
+
+  public void visitProperty(@NotNull ShaderProperty o) {
+    visitPsiElement(o);
+  }
+
+  public void visitUnaryExpr(@NotNull ShaderUnaryExpr o) {
+    visitPsiElement(o);
+  }
+
+  public void visitUnaryOp(@NotNull ShaderUnaryOp o) {
     visitPsiElement(o);
   }
 

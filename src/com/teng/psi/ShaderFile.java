@@ -6,9 +6,10 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import com.teng.Language.ShaderFileType;
 import com.teng.Language.ShaderLanguage;
+import com.teng.psi.element.ShaderTypeGuessable;
 import org.jetbrains.annotations.NotNull;
 
-public class ShaderFile extends PsiFileBase {
+public class ShaderFile extends PsiFileBase implements ShaderTypeGuessable{
 
     public ShaderFile(@NotNull FileViewProvider viewProvider) {
         super(viewProvider, ShaderLanguage.Instance);
@@ -18,5 +19,10 @@ public class ShaderFile extends PsiFileBase {
     @Override
     public FileType getFileType() {
         return ShaderFileType.Instance;
+    }
+
+    @Override
+    public String moduleName() {
+        return null;
     }
 }
