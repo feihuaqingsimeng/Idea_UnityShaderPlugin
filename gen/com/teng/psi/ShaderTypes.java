@@ -13,7 +13,10 @@ public interface ShaderTypes {
   IElementType BINARY_OP = ShaderUtil.createType("BINARY_OP");
   IElementType EXPR = ShaderUtil.createType("EXPR");
   IElementType IF_STAT = ShaderUtil.createType("IF_STAT");
-  IElementType PROPERTY = ShaderUtil.createType("PROPERTY");
+  IElementType LITERAL_EXPR = ShaderUtil.createType("LITERAL_EXPR");
+  IElementType NAME_DEF = ShaderUtil.createType("NAME_DEF");
+  IElementType NAME_EXPR = ShaderUtil.createType("NAME_EXPR");
+  IElementType TABLE_EXPR = ShaderUtil.createType("TABLE_EXPR");
   IElementType UNARY_EXPR = ShaderUtil.createType("UNARY_EXPR");
   IElementType UNARY_OP = ShaderUtil.createType("UNARY_OP");
 
@@ -28,14 +31,15 @@ public interface ShaderTypes {
   IElementType BREAK = ShaderUtil.createToken("break");
   IElementType CLOSUREEXPR = ShaderUtil.createToken("closureExpr");
   IElementType COMMA = ShaderUtil.createToken(",");
-  IElementType COMMENT = ShaderUtil.createToken("COMMENT");
-  IElementType CRLF = ShaderUtil.createToken("CRLF");
+  IElementType CONTINUE = ShaderUtil.createToken("continue");
   IElementType DIV = ShaderUtil.createToken("/");
+  IElementType DO = ShaderUtil.createToken("do");
   IElementType DOT = ShaderUtil.createToken(".");
   IElementType ELSE = ShaderUtil.createToken("else");
   IElementType ENDREGION = ShaderUtil.createToken("ENDREGION");
   IElementType EQ = ShaderUtil.createToken("==");
   IElementType EXP = ShaderUtil.createToken("^");
+  IElementType FALSE = ShaderUtil.createToken("false");
   IElementType FOR = ShaderUtil.createToken("for");
   IElementType GE = ShaderUtil.createToken(">=");
   IElementType GETN = ShaderUtil.createToken("#");
@@ -43,8 +47,8 @@ public interface ShaderTypes {
   IElementType ID = ShaderUtil.createToken("ID");
   IElementType IF = ShaderUtil.createToken("if");
   IElementType IN = ShaderUtil.createToken("in");
-  IElementType KEY = ShaderUtil.createToken("KEY");
   IElementType LBRACKET = ShaderUtil.createToken("[");
+  IElementType LCURLY = ShaderUtil.createToken("{");
   IElementType LE = ShaderUtil.createToken("<=");
   IElementType LPAREN = ShaderUtil.createToken("(");
   IElementType LT = ShaderUtil.createToken("<");
@@ -53,19 +57,22 @@ public interface ShaderTypes {
   IElementType MULT = ShaderUtil.createToken("*");
   IElementType NE = ShaderUtil.createToken("!=");
   IElementType NOT = ShaderUtil.createToken("!");
+  IElementType NULL = ShaderUtil.createToken("null");
   IElementType NUMBER = ShaderUtil.createToken("NUMBER");
   IElementType OR = ShaderUtil.createToken("||");
   IElementType OUT = ShaderUtil.createToken("out");
   IElementType PLUS = ShaderUtil.createToken("+");
   IElementType PRIMARYEXPR = ShaderUtil.createToken("primaryExpr");
   IElementType RBRACKET = ShaderUtil.createToken("]");
-  IElementType RCURLY = ShaderUtil.createToken("{");
+  IElementType RCURLY = ShaderUtil.createToken("}");
   IElementType REGION = ShaderUtil.createToken("REGION");
+  IElementType RETURN = ShaderUtil.createToken("return");
   IElementType RPAREN = ShaderUtil.createToken(")");
   IElementType SEMI = ShaderUtil.createToken(";");
-  IElementType SEPARATOR = ShaderUtil.createToken("SEPARATOR");
+  IElementType SHORT_COMMENT = ShaderUtil.createToken("SHORT_COMMENT");
   IElementType STRING = ShaderUtil.createToken("STRING");
-  IElementType VALUE = ShaderUtil.createToken("VALUE");
+  IElementType TRUE = ShaderUtil.createToken("true");
+  IElementType WHILE = ShaderUtil.createToken("while");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -82,8 +89,17 @@ public interface ShaderTypes {
       else if (type == IF_STAT) {
         return new ShaderIfStatImpl(node);
       }
-      else if (type == PROPERTY) {
-        return new ShaderPropertyImpl(node);
+      else if (type == LITERAL_EXPR) {
+        return new ShaderLiteralExprImpl(node);
+      }
+      else if (type == NAME_DEF) {
+        return new ShaderNameDefImpl(node);
+      }
+      else if (type == NAME_EXPR) {
+        return new ShaderNameExprImpl(node);
+      }
+      else if (type == TABLE_EXPR) {
+        return new ShaderTableExprImpl(node);
       }
       else if (type == UNARY_EXPR) {
         return new ShaderUnaryExprImpl(node);

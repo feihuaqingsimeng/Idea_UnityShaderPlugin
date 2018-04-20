@@ -2,9 +2,8 @@ package com.teng.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import com.teng.psi.ShaderTypes;
 import com.intellij.psi.TokenType;
-
+import static com.teng.psi.ShaderTypes.*;
 %%
 %{
     public ShaderLexer()
@@ -18,10 +17,87 @@ import com.intellij.psi.TokenType;
 %unicode
 %function advance
 %type IElementType
-%eof{  return;
-%eof}
 
-CRLF=\R
+
+EOL = "\r"|"\n" | "\r\n"
+LINE_WS = [\ \t\f]
+WHITE_SPACE = ({LINE_WS} | {EOL})+
+
+ID = [:jletter:] [:jletterdigit:]*
+//number
+n = [0-9]+
+h = [0-9a-fA-F]+
+exp = [Ee]([+-]?{n})?
+ppp = [Pp][+-]{n}
+NUMBER = (0[xX]({h}|{h}[.]{h})({exp}|{ppp})?|({n}|{n}[.]{n}){exp}?|[.]{n}|{n}[.])
+
+//comments
+REGION_START = #region({LINE_WS}+[\S]*)*
+REGION_END = #endregion({LINE_WS}+[^\r\n]*)*
+BLOCK_COMMENT = "/*"[\s\S]*("*/")?
+SHORT_COMMENT = "//".*
+STRING = \"([^\\\"]|\\\S\\[\r\n])*\"?
+
+%%
+<YYINITIAL> {
+    {WHITE_SPACE}       {return TokenType.WHITE_SPACE;}
+    {REGION_START}     {return REGION;}
+    {REGION_END}        {return ENDREGION;}
+
+
+    {BLOCK_COMMENT}     {return BLOCK_COMMENT;}
+    {SHORT_COMMENT}     {return SHORT_COMMENT;}
+    {STRING}  {return STRING;}
+
+    "||"                 { return OR; }
+    "&&"                 { return AND; }
+    "break"              { return BREAK; }
+    "return"             { return RETURN; }
+    "continue"           { return CONTINUE; }
+    "do"                 { return DO; }
+    "while"              { return WHILE; }
+    "if"                 { return IF; }
+    "else"               { return ELSE; }
+    "for"                { return FOR; }
+    "in"                 { return IN; }
+    "out"                { return OUT; }
+    "!"                  { return NOT; }
+    "=="                 { return EQ; }
+    ">="                 { return GE; }
+    "<="                 { return LE; }
+    "!="                 { return NE; }
+    "-"                  { return MINUS; }
+    "+"                  { return PLUS; }
+    "*"                  { return MULT; }
+    "%"                  { return MOD; }
+    "/"                  { return DIV; }
+    "="                  { return ASSIGN; }
+    ">"                  { return GT; }
+    "<"                  { return LT; }
+    "("                  { return LPAREN; }
+    ")"                  { return RPAREN; }
+    "["                  { return LBRACKET; }
+    "]"                  { return RBRACKET; }
+    "{"                  { return LCURLY; }
+    "}"                  { return RCURLY; }
+    "#"                  { return GETN; }
+    ","                  { return COMMA; }
+    ";"                  { return SEMI; }
+    "."                  { return DOT; }
+    "^"                  { return EXP; }
+    "|"                  { return BIT_OR; }
+    "&"                  { return BIT_AND; }
+    "~"                  { return BIT_TILDE; }
+    "<<"                 { return BIT_LTLT; }
+    ">>"                 { return BIT_RTRT; }
+
+    {ID}                {return ID;}
+    {NUMBER}            {return NUMBER;}
+
+
+}
+[^]                 {return TokenType.BAD_CHARACTER;}
+/*CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
 FIRST_VALUE_CHARACTER=[^ \n\f\\] | "\\"{CRLF} | "\\".
 VALUE_CHARACTER=[^\n\f\\] | "\\"{CRLF} | "\\".
@@ -48,3 +124,4 @@ KEY_CHARACTER=[^:=\ \n\t\f\\] | "\\ "
 ({CRLF}|{WHITE_SPACE})+                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
 .                                                           { return TokenType.BAD_CHARACTER; }
+*/

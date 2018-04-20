@@ -29,13 +29,11 @@
     <lang.parserDefinition language="shader" implementationClass="com.teng.psi.ShaderParseDefinition" />
     <lang.syntaxHighlighterFactory language="shader" implementationClass="com.teng.highlighting.ShaderSyntaxHighlighterFactory" />
     <colorSettingsPage implementation="com.teng.highlighting.ShaderColorSettingsPage" />
-    <annotator language="JAVA" implementationClass="com.teng.annotation.ShaderAnnotator" />
     <completion.contributor language="shader" implementationClass="com.teng.completion.ShaderCompletionContributor" />
-    <lang.foldingBuilder language="JAVA" implementationClass="com.teng.folding.ShaderFoldingBuilder" />
   </extensions>
 
   <actions>
-    <action id="HelloAction" class="com.teng.Action.HelloAction" text="Hello Shader" description="Hello Shader des">
+    <action id="HelloAction" class="com.teng.Action.HelloAction" text="Hello button" description="Hello button des">
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
     </action>
   </actions>

@@ -12,12 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class ShaderCompletionContributor extends CompletionContributor {
     public ShaderCompletionContributor(){
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShaderTypes.VALUE).withLanguage(ShaderLanguage.Instance),
-                new CompletionProvider<CompletionParameters>() {
-                    @Override
-                    protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
-                        result.addElement(LookupElementBuilder.create("hello"));
-                    }
-                });
+
     }
 }

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class ShaderParseDefinition implements ParserDefinition {
 
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
-    public static final TokenSet COMMENT = TokenSet.create(ShaderTypes.COMMENT);
+    public static final TokenSet COMMENT = TokenSet.create(ShaderTypes.SHORT_COMMENT,ShaderTypes.BLOCK_COMMENT,ShaderTypes.REGION,ShaderTypes.ENDREGION);
     public static final TokenSet STRING = TokenSet.create(ShaderTypes.STRING);
     public static final IFileElementType FILE = new IFileElementType(ShaderLanguage.Instance);
     @NotNull

@@ -4,6 +4,8 @@ package com.teng.psi;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
+import com.teng.psi.element.ShaderPsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 
 public class ShaderVisitor extends PsiElementVisitor {
 
@@ -21,7 +23,20 @@ public class ShaderVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitProperty(@NotNull ShaderProperty o) {
+  public void visitLiteralExpr(@NotNull ShaderLiteralExpr o) {
+    visitPsiElement(o);
+  }
+
+  public void visitNameDef(@NotNull ShaderNameDef o) {
+    visitPsiElement(o);
+  }
+
+  public void visitNameExpr(@NotNull ShaderNameExpr o) {
+    visitPsiElement(o);
+    // visitPsiNameIdentifierOwner(o);
+  }
+
+  public void visitTableExpr(@NotNull ShaderTableExpr o) {
     visitPsiElement(o);
   }
 
@@ -30,6 +45,10 @@ public class ShaderVisitor extends PsiElementVisitor {
   }
 
   public void visitUnaryOp(@NotNull ShaderUnaryOp o) {
+    visitPsiElement(o);
+  }
+
+  public void visitPsiElement(@NotNull ShaderPsiElement o) {
     visitPsiElement(o);
   }
 

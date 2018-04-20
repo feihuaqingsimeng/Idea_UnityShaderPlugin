@@ -21,8 +21,4 @@ public class ShaderFile extends PsiFileBase implements ShaderTypeGuessable{
         return ShaderFileType.Instance;
     }
 
-    @Override
-    public String moduleName() {
-        return null;
-    }
 }

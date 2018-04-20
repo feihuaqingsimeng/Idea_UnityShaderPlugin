@@ -35,8 +35,17 @@ public class ShaderParser implements PsiParser, LightPsiParser {
     else if (t == IF_STAT) {
       r = ifStat(b, 0);
     }
-    else if (t == PROPERTY) {
-      r = property(b, 0);
+    else if (t == LITERAL_EXPR) {
+      r = literalExpr(b, 0);
+    }
+    else if (t == NAME_DEF) {
+      r = nameDef(b, 0);
+    }
+    else if (t == NAME_EXPR) {
+      r = nameExpr(b, 0);
+    }
+    else if (t == TABLE_EXPR) {
+      r = tableExpr(b, 0);
     }
     else if (t == UNARY_EXPR) {
       r = unaryExpr(b, 0);
@@ -130,44 +139,69 @@ public class ShaderParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (KEY? SEPARATOR VALUE?) | KEY | COMMENT|CRLF |binaryOp
-  public static boolean property(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "property")) return false;
+  // null | false | true | NUMBER |STRING {
+  // }
+  public static boolean literalExpr(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "literalExpr")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, PROPERTY, "<property>");
-    r = property_0(b, l + 1);
-    if (!r) r = consumeToken(b, KEY);
-    if (!r) r = consumeToken(b, COMMENT);
-    if (!r) r = consumeToken(b, CRLF);
-    if (!r) r = binaryOp(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, LITERAL_EXPR, "<literal expr>");
+    r = consumeToken(b, NULL);
+    if (!r) r = consumeToken(b, FALSE);
+    if (!r) r = consumeToken(b, TRUE);
+    if (!r) r = consumeToken(b, NUMBER);
+    if (!r) r = literalExpr_4(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // KEY? SEPARATOR VALUE?
-  private static boolean property_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "property_0")) return false;
+  // STRING {
+  // }
+  private static boolean literalExpr_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "literalExpr_4")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = property_0_0(b, l + 1);
-    r = r && consumeToken(b, SEPARATOR);
-    r = r && property_0_2(b, l + 1);
+    r = consumeToken(b, STRING);
+    r = r && literalExpr_4_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // KEY?
-  private static boolean property_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "property_0_0")) return false;
-    consumeToken(b, KEY);
+  // {
+  // }
+  private static boolean literalExpr_4_1(PsiBuilder b, int l) {
     return true;
   }
 
-  // VALUE?
-  private static boolean property_0_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "property_0_2")) return false;
-    consumeToken(b, VALUE);
+  /* ********************************************************** */
+  // ID {
+  // }
+  public static boolean nameDef(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "nameDef")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ID);
+    r = r && nameDef_1(b, l + 1);
+    exit_section_(b, m, NAME_DEF, r);
+    return r;
+  }
+
+  // {
+  // }
+  private static boolean nameDef_1(PsiBuilder b, int l) {
     return true;
+  }
+
+  /* ********************************************************** */
+  // ID
+  public static boolean nameExpr(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "nameExpr")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ID);
+    exit_section_(b, m, NAME_EXPR, r);
+    return r;
   }
 
   /* ********************************************************** */
@@ -184,9 +218,9 @@ public class ShaderParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // property
+  // expr
   static boolean stat_impl(PsiBuilder b, int l) {
-    return property(b, l + 1);
+    return expr(b, l + 1);
   }
 
   /* ********************************************************** */
@@ -205,6 +239,27 @@ public class ShaderParser implements PsiParser, LightPsiParser {
   private static boolean stat_semi_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "stat_semi_1")) return false;
     consumeToken(b, SEMI);
+    return true;
+  }
+
+  /* ********************************************************** */
+  // '{'ID '}'
+  // {
+  // }
+  public static boolean tableExpr(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "tableExpr")) return false;
+    if (!nextTokenIs(b, LCURLY)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, LCURLY, ID, RCURLY);
+    r = r && tableExpr_3(b, l + 1);
+    exit_section_(b, m, TABLE_EXPR, r);
+    return r;
+  }
+
+  // {
+  // }
+  private static boolean tableExpr_3(PsiBuilder b, int l) {
     return true;
   }
 

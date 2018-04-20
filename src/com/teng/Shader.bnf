@@ -21,6 +21,10 @@
         OR = "||"
         AND = "&&"
         BREAK = "break"
+        RETURN = "return"
+        CONTINUE = "continue"
+        DO = "do"
+        WHILE = "while"
         IF = "if"
         ELSE = "else"
         FOR = "for"
@@ -47,7 +51,7 @@
         LBRACKET = "["
         RBRACKET = "]"
         LCURLY = "{"
-        RCURLY = "{"
+        RCURLY = "}"
         GETN = "#"
         COMMA = ","
         SEMI = ";"
@@ -55,6 +59,7 @@
         EXP = "^"
 
         BLOCK_COMMENT = "BLOCK_COMMENT"
+        SHORT_COMMENT = "SHORT_COMMENT"
         ID = "regexp:[A-Za-z_][A-Za-z0-9_]*"
         NUMBER = "NUMBER"
         STRING = "STRING"
@@ -65,19 +70,22 @@
         BIT_LTLT = "<<"
         BIT_RTRT = ">>"
     ]
+    //extends(".*Expr") = expr
+
 }
 
 shaderFile ::= stat_semi*
 
 private stat_semi ::= stat_impl ';' ?
 
-private stat_impl ::= property
+private stat_impl ::= expr
 
 expr ::= <<parseExpr primaryExpr closureExpr>>
 {
     implements = [
         //"com.teng.psi.element.ShaderTypeGuessable"
     ]
+
 }
 
 binaryOp ::= '+' | '-' | '*' | '/' | '^' | '%' | '<' | '<=' | '>' | '>=' | '==' | '!=' | '&&' | '||'
@@ -90,6 +98,29 @@ left binaryExpr  ::= binaryOp expr
 }
 unaryOp ::= '-' | '!'
 unaryExpr ::= unaryOp (unaryExpr )
+nameDef ::= ID {
+
+}
+nameExpr ::= ID
+{
+    implements = [
+    "com.teng.psi.element.ShaderPsiElement"
+    "com.intellij.psi.PsiNameIdentifierOwner"
+    ]
+    methods = [
+        getName
+        setName
+        getNameIdentifier
+
+    ]
+}
+literalExpr ::= null | false | true | NUMBER |STRING {
+
+}
+tableExpr ::= '{'ID '}'
+{
+
+}
 /*private primaryExpr ::= prefixExpr(suffixExpr*)
 private prefixExpr ::= parenExpr | nameExpr | literalExpr| tableExpr
 private suffixExpr ::= indexExpr | callExpr
@@ -121,5 +152,3 @@ closureExpr ::= 'function' funcBody{
 }
 */
 ifStat ::= 'if' ID 'then' ID 'end'{}
-
-property ::= (KEY? SEPARATOR VALUE?) | KEY | COMMENT|CRLF |binaryOp
