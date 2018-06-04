@@ -33,9 +33,9 @@ public class ShaderBinaryExprImpl extends ASTWrapperPsiElement implements Shader
   }
 
   @Override
-  @Nullable
+  @NotNull
   public ShaderExpr getExpr() {
-    return findChildByClass(ShaderExpr.class);
+    return findNotNullChildByClass(ShaderExpr.class);
   }
 
 }

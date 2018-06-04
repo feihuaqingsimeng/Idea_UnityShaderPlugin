@@ -4,13 +4,14 @@ package com.teng.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.teng.psi.element.ShaderPsiElement;
 
-public interface ShaderBinaryExpr {
+public interface ShaderBinaryExpr extends ShaderPsiElement {
 
   @NotNull
   ShaderBinaryOp getBinaryOp();
 
-  @Nullable
+  @NotNull
   ShaderExpr getExpr();
 
 }

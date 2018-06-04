@@ -25,7 +25,7 @@ public class ShaderFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDescription() {
-        return "shader language description";
+        return "shader";
     }
 
     @NotNull

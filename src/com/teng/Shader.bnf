@@ -1,6 +1,7 @@
 {
     parserClass="com.teng.parser.ShaderParser"
 
+    implements = "com.teng.psi.element.ShaderPsiElement"
     extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
     psiClassPrefix="Shader"
@@ -15,7 +16,7 @@
     elementTypeFactory = "com.teng.Util.ShaderUtil.createType"
     tokenTypeClass="com.teng.psi.ShaderTokenType"
     tokenTypeFactory = "com.teng.Util.ShaderUtil.createToken"
-
+    parserImports = "static com.intellij.lang.WhitespacesBinders.*"
 
     tokens = [
         OR = "||"
@@ -30,8 +31,7 @@
         FOR = "for"
         IN = "in"
         OUT = "out"
-        REGION = "REGION"
-        ENDREGION = "ENDREGION"
+        inout = "inout"
         NOT = "!"
 
         EQ = "=="
@@ -54,51 +54,179 @@
         RCURLY = "}"
         GETN = "#"
         COMMA = ","
+        COLON = ":"
         SEMI = ";"
         DOT = "."
         EXP = "^"
 
-        BLOCK_COMMENT = "BLOCK_COMMENT"
-        SHORT_COMMENT = "SHORT_COMMENT"
+        BLOCK_COMMENT = 'regexp:"/*"[\s\S]*("*/")?'
+        SHORT_COMMENT = "regexp://.*"
         ID = "regexp:[A-Za-z_][A-Za-z0-9_]*"
-        NUMBER = "NUMBER"
-        STRING = "STRING"
+        NUMBER = "regexp:[0-9]+"
+        STRING = "regexp:\"([^\\\"]|\\\S\\[\r\n])*\"?"
 
         BIT_OR = "|"
         BIT_AND = "&"
         BIT_TILDE = "~"
         BIT_LTLT = "<<"
         BIT_RTRT = ">>"
+        //shader keyword
+        SHADER = "Shader"
+        Properties = "Properties"
+        SubShader = "SubShader"
+        Tags = "Tags"
+        Pass = "Pass"
+        CGPROGRAM = "CGPROGRAM"
+        ENDCG = "ENDCG"
+        include = "include"
+        pragma = "pragma"
+        struct = "struct"
+        define = "define"
+        ifndef = "ifndef"
+        ifdef = "ifdef"
+        endif = "endif"
+        inline = "inline"
+        void = "void"
+        //shader keyword
+       // float  = "float"
+        //half = "half"
+        //int = "int"
+        //fixed = "fixed"
+        //bool = "bool"
+        //sampler = "sampler"
     ]
-    //extends(".*Expr") = expr
+
 
 }
 
 shaderFile ::= stat_semi*
 
-private stat_semi ::= stat_impl ';' ?
+private stat_semi ::= <<parseStatement>>
+//block ::= stat_semi*
 
-private stat_impl ::= expr
-
-expr ::= <<parseExpr primaryExpr closureExpr>>
+expr ::= <<parseExpr>>
 {
-    implements = [
-        //"com.teng.psi.element.ShaderTypeGuessable"
-    ]
 
 }
 
+exprStat ::= expr ';'{
+
+}
 binaryOp ::= '+' | '-' | '*' | '/' | '^' | '%' | '<' | '<=' | '>' | '>=' | '==' | '!=' | '&&' | '||'
     | '|' | '&' | '>>' | '<<' | '~'
 left binaryExpr  ::= binaryOp expr
 {
-    pin = 1
-    implements = [
-    ]
+
 }
+assignStat ::= varExpr '=' expr{
+
+}
+left indexExpr ::= '[' expr ']' | '.' ID{
+
+}
+exprList ::= expr (',' expr)*{
+
+}
+listArgs ::= tableExpr | stringExpr {
+
+}
+args ::= listArgs | singleArg{
+
+}
+singleArg ::= tableExpr | stringExpr
+left callExpr ::= args{
+
+}
+varList ::= varExpr (',' varExpr)*{
+
+}
+private varExpr ::= primaryExpr
+private primaryExpr ::= prefixExpr(suffixExpr*)
+private prefixExpr ::= parenExpr | nameExpr | tableExpr | literalExpr
+private suffixExpr ::= indexExpr | callExpr
+//ShaderKeyword ::= "Shader"|"Properties"|"SubShader"|"Tags"|"LOD"|"Pass"|"CGPROGRAM"|"ENDCG"|"pragma"|"struct"|"sampler2D"|"float4"
+//                          |"float3"|"float2"|"float"|"POSITION"|"TEXCOORD0"|"SV_POSITION"|"SV_Target"
 unaryOp ::= '-' | '!'
 unaryExpr ::= unaryOp (unaryExpr )
+emptyStat ::= ';'
 nameDef ::= ID {
+
+}
+
+shaderClass ::= 'Shader' ID tableExpr{
+
+}
+subShaderClass ::= 'SubShader' tableExpr{
+
+}
+propertiesClass ::= 'Properties' '{' propertiesFieldList '}'{
+
+}
+propertiesFieldList ::= propertiesField*
+propertiesField ::= ID '(' STRING ',' expr ')' '=' expr
+
+tagsClass ::= 'Tags' '{' tagsFieldList '}'
+
+tagsFieldList ::= tagsField*
+tagsField ::=  STRING  '=' STRING
+
+passClass ::= 'Pass' '{' CGPROGRAMField '}'
+
+CGPROGRAMField ::= 'CGPROGRAM' expr* 'ENDCG'
+
+pragmaExpr ::= '#' 'pragma' (ID)*
+
+includeExpr ::= '#' 'include' STRING
+
+varDeclareExpr ::= ID  expr ';'
+
+structClass ::= 'struct' ID '{' structField* '}' ';'
+structField ::= variableDeclare | expr
+
+
+variableDeclare ::=  variableDeclare1 | varDeclareExpr2
+variableDeclare1 ::= ID ID ':' ID
+varDeclareExpr2 ::= ID  expr ';'
+
+returnStat ::= return expr ';'
+methodCallExpr ::= ID ('.' ID)* '(' listArgs ')'
+
+methodDef ::= ID ID '('listArgs ')' ':' ID
+
+defineStat ::= '#' 'define' expr expr
+
+ifNDefExpr ::= '#' 'ifndef' ID
+
+ifDefExpr ::= '#' 'ifdef' ID
+
+genIfStat ::= '#' 'if' expr
+
+methodParameterList ::= methodParameter (',' methodParameter)*
+
+methodParameter ::= ID ID
+
+methodBody ::=  '{' <<lazyBlock>>? '}'
+
+
+
+
+funcDef ::= ID funcBody {
+
+}
+funcBody ::= '('(parList)? ')' '{' <<lazyBlock>>? '}' {
+
+}
+private parList ::= paramNameDef (',' paramNameDef)* {
+
+}
+
+paramNameDef ::= ID{
+
+}
+parenExpr ::= '(' expr ')'{
+
+}
+stringExpr ::= STRING{
 
 }
 nameExpr ::= ID
@@ -117,38 +245,17 @@ nameExpr ::= ID
 literalExpr ::= null | false | true | NUMBER |STRING {
 
 }
-tableExpr ::= '{'ID '}'
-{
 
-}
-/*private primaryExpr ::= prefixExpr(suffixExpr*)
-private prefixExpr ::= parenExpr | nameExpr | literalExpr| tableExpr
-private suffixExpr ::= indexExpr | callExpr
-
-parenExpr ::= '(' expr ')'
-{
-
-}
-nameExpr ::= ID
-{
-
-}
-literalExpr ::= null | false | true | NUMBER |STRING {
-
-}
 tableExpr ::= '{'fieldList '}'
 {
 
 }
-left indexExpr ::= '[' expr ']' | '.' ID
-{
+private fieldList ::= (tableField (tableFieldSep tableField)* (tableFieldSep)?)?
+private tableField1 ::= '[' expr ']' '=' expr
+private tableField2 ::= ID '=' expr
+tableField ::= tableField1 | tableField2 | expr{
 
 }
-left callExpr ::= args {
+tableFieldSep ::= ';'
 
-}
-closureExpr ::= 'function' funcBody{
-
-}
-*/
-ifStat ::= 'if' ID 'then' ID 'end'{}
+ifStat ::= 'if' ID 'then' ID 'end'

@@ -23,7 +23,7 @@ EOL = "\r"|"\n" | "\r\n"
 LINE_WS = [\ \t\f]
 WHITE_SPACE = ({LINE_WS} | {EOL})+
 
-ID = [:jletter:] [:jletterdigit:]*
+ID = [:jletter:] [:jletterdigit:]* | 2D
 //number
 n = [0-9]+
 h = [0-9a-fA-F]+
@@ -32,8 +32,6 @@ ppp = [Pp][+-]{n}
 NUMBER = (0[xX]({h}|{h}[.]{h})({exp}|{ppp})?|({n}|{n}[.]{n}){exp}?|[.]{n}|{n}[.])
 
 //comments
-REGION_START = #region({LINE_WS}+[\S]*)*
-REGION_END = #endregion({LINE_WS}+[^\r\n]*)*
 BLOCK_COMMENT = "/*"[\s\S]*("*/")?
 SHORT_COMMENT = "//".*
 STRING = \"([^\\\"]|\\\S\\[\r\n])*\"?
@@ -41,8 +39,6 @@ STRING = \"([^\\\"]|\\\S\\[\r\n])*\"?
 %%
 <YYINITIAL> {
     {WHITE_SPACE}       {return TokenType.WHITE_SPACE;}
-    {REGION_START}     {return REGION;}
-    {REGION_END}        {return ENDREGION;}
 
 
     {BLOCK_COMMENT}     {return BLOCK_COMMENT;}
@@ -61,6 +57,7 @@ STRING = \"([^\\\"]|\\\S\\[\r\n])*\"?
     "for"                { return FOR; }
     "in"                 { return IN; }
     "out"                { return OUT; }
+    "inout"              { return INOUT; }
     "!"                  { return NOT; }
     "=="                 { return EQ; }
     ">="                 { return GE; }
@@ -83,6 +80,7 @@ STRING = \"([^\\\"]|\\\S\\[\r\n])*\"?
     "#"                  { return GETN; }
     ","                  { return COMMA; }
     ";"                  { return SEMI; }
+    ":"                  {return COLON;}
     "."                  { return DOT; }
     "^"                  { return EXP; }
     "|"                  { return BIT_OR; }
@@ -90,7 +88,22 @@ STRING = \"([^\\\"]|\\\S\\[\r\n])*\"?
     "~"                  { return BIT_TILDE; }
     "<<"                 { return BIT_LTLT; }
     ">>"                 { return BIT_RTRT; }
-
+    "Shader"             { return SHADER; }
+    "Properties"         { return PROPERTIES; }
+    "SubShader"          { return SUBSHADER; }
+    "Tags"               { return TAGS; }
+    "Pass"               { return PASS; }
+    "CGPROGRAM"          { return CGPROGRAM; }
+    "ENDCG"              { return ENDCG; }
+    "include"            { return INCLUDE; }
+    "pragma"             { return PRAGMA; }
+    "struct"             { return STRUCT; }
+    "define"             { return DEFINE; }
+    "ifndef"             { return IFNDEF; }
+    "ifdef"              { return IFDEF; }
+    "endif"              { return ENDIF; }
+    "inline"             { return INLINE; }
+    "void"               { return VOID; }
     {ID}                {return ID;}
     {NUMBER}            {return NUMBER;}
 

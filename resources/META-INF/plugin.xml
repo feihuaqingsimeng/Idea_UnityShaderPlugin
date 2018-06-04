@@ -30,6 +30,8 @@
     <lang.syntaxHighlighterFactory language="shader" implementationClass="com.teng.highlighting.ShaderSyntaxHighlighterFactory" />
     <colorSettingsPage implementation="com.teng.highlighting.ShaderColorSettingsPage" />
     <completion.contributor language="shader" implementationClass="com.teng.completion.ShaderCompletionContributor" />
+    <findUsagesHandlerFactory implementation="com.teng.usages.ShaderFindUsagesHandlerFactory" />
+    <lang.findUsagesProvider language="shader" implementationClass="com.teng.usages.ShaderFindUsagesProvider" />
   </extensions>
 
   <actions>

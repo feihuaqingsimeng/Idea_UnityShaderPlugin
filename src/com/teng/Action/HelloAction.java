@@ -47,11 +47,12 @@ public class HelloAction extends AnAction {
         {
             return;
         }
-        PsiFile f = PsiFileFactory.getInstance(project).createFileFromText("test", JavaLanguage.INSTANCE,"\nfunction a:test()  \nend\n");
+        //PsiFile f = PsiFileFactory.getInstance(project).createFileFromText("test", JavaLanguage.INSTANCE,"\nfunction a:test()  \nend\n");
+        PsiMethod method =  JavaPsiFacade.getInstance(project).getElementFactory().createMethod("haheta",PsiType.VOID);
         WriteCommandAction.Simple simple = new WriteCommandAction.Simple(project) {
             @Override
             protected void run() throws Throwable {
-                file.add(f);
+                file.add(method);
             }
         };
         simple.execute();

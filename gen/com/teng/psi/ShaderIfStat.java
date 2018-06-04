@@ -4,7 +4,8 @@ package com.teng.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.teng.psi.element.ShaderPsiElement;
 
-public interface ShaderIfStat extends PsiElement {
+public interface ShaderIfStat extends ShaderPsiElement {
 
 }
